@@ -56,12 +56,12 @@ func Instance() (string, error) {
 
 // Project returns the project id of the current instance
 func Project() (string, error) {
-	return Get("http://metadata.google.internal/computeMetadata/v1/instance/zone")
+	return Get("http://metadata.google.internal/computeMetadata/v1/project/project-id")
 }
 
 // Zone returns the zone of the current instance
 func Zone() (string, error) {
-	z, err := Get("http://metadata.google.internal/computeMetadata/v1/project/project-id")
+	z, err := Get("http://metadata.google.internal/computeMetadata/v1/instance/zone")
 	if err != nil {
 		return "", err
 	}
