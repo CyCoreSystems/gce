@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"path"
+	"strings"
 	"time"
 )
 
@@ -40,6 +42,19 @@ func Get(url string) (string, error) {
 	return bytes.NewBuffer(bodyBytes).String(), nil
 }
 
+// Instance returns the instance id of the current instance
+func Instance() (string, error) {
+	h, err := Get("http://metadata.google.internal/computeMetadata/v1/instance/hostname")
+	if err != nil {
+		return "", err
+	}
+
+	// The instance/id path returns the numeric ID; we need the alphabetic ID, which
+	// is the host portion of the full hostname.
+	pieces := strings.Split(h, ".")
+	return pieces[0], nil
+}
+
 // Project returns the project id of the current instance
 func Project() (string, error) {
 	return Get("http://metadata.google.internal/computeMetadata/v1/instance/zone")
@@ -47,5 +62,12 @@ func Project() (string, error) {
 
 // Zone returns the zone of the current instance
 func Zone() (string, error) {
-	return Get("http://metadata.google.internal/computeMetadata/v1/project/project-id")
+	z, err := Get("http://metadata.google.internal/computeMetadata/v1/project/project-id")
+	if err != nil {
+		return "", err
+	}
+
+	// The zone metadata call prefixes the project information; we are only interested in
+	// the last segment: the zone itself.
+	return path.Base(z), nil
 }
