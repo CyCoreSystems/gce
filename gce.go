@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"path"
 	"strings"
 	"time"
 )
@@ -69,5 +68,6 @@ func Zone() (string, error) {
 
 	// The zone metadata call prefixes the project information; we are only interested in
 	// the last segment: the zone itself.
-	return path.Base(z), nil
+	pieces := strings.Split(z, "/")
+	return pieces[len(pieces)-1], nil
 }
