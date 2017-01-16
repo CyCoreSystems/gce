@@ -71,3 +71,13 @@ func Zone() (string, error) {
 	pieces := strings.Split(z, "/")
 	return pieces[len(pieces)-1], nil
 }
+
+// PrivateIPv4 returns the internal IPv4 address of the node
+func PrivateIPv4() (string, error) {
+	return Get("http://metadata.google.internal/computeMetadata/v1/instance/network-interfaces/0/ip")
+}
+
+// PublicIPv4 returns the public IPv4 address of the node
+func PublicIPv4() (string, error) {
+	return Get("http://metadata.google.internal/computeMetadata/v1/instance/network-interfaces/0/access-configs/0/external-ip")
+}
