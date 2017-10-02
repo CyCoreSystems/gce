@@ -41,6 +41,11 @@ func Get(url string) (string, error) {
 	return bytes.NewBuffer(bodyBytes).String(), nil
 }
 
+// Cluster returns the name of the GKE cluster
+func Cluster() (string, error) {
+	return Get("http://metadata.google.internal/computeMetadata/v1/instance/attributes/cluster-name")
+}
+
 // Instance returns the instance id of the current instance
 func Instance() (string, error) {
 	h, err := Get("http://metadata.google.internal/computeMetadata/v1/instance/hostname")
